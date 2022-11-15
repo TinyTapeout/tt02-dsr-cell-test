@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "author": "Uri Shaked",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-dip-switch-8",
+      "id": "sw1",
+      "top": -178.4,
+      "left": -102.9,
+      "rotate": 90,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-clock-generator",
+      "id": "clock1",
+      "top": -278.4,
+      "left": -134.4,
+      "attrs": {}
+    },
+    { "type": "wokwi-gnd", "id": "pwr2", "top": -76.8, "left": 719.4, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "pwr1", "top": -229.64, "left": -115.2, "attrs": {} },
+    {
+      "type": "chip-input-8-pins",
+      "id": "chip1",
+      "top": -190.98,
+      "left": -4.8,
+      "attrs": { "verilogRole": "input" }
+    },
+    {
+      "type": "chip-output-8-pins",
+      "id": "chip2",
+      "top": -190.98,
+      "left": 513.6,
+      "attrs": { "verilogRole": "output" }
+    },
+    {
+      "type": "wokwi-7segment",
+      "id": "sevseg1",
+      "top": -183.24,
+      "left": 705.88,
+      "attrs": { "common": "cathode" }
+    },
+    {
+      "type": "wokwi-slide-switch",
+      "id": "sw2",
+      "top": -302.8,
+      "left": -35.3,
+      "attrs": { "value": "1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": -354.6,
+      "left": -146,
+      "attrs": { "color": "grey", "label": "Step", "bounce": "0" }
+    },
+    { "type": "wokwi-vcc", "id": "pwr3", "top": -392.84, "left": -86.4, "attrs": {} },
+    {
+      "type": "wokwi-flip-flop-dsr",
+      "id": "flipflop2",
+      "top": -182.4,
+      "left": 316.8,
+      "attrs": {}
+    },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": -76.8, "left": 460.2, "attrs": {} }
+  ],
+  "connections": [
+    [ "pwr1:VCC", "sw1:8a", "red", [ "v0" ] ],
+    [ "pwr1:VCC", "sw1:7a", "red", [ "v0" ] ],
+    [ "pwr1:VCC", "sw1:6a", "red", [ "v0" ] ],
+    [ "pwr1:VCC", "sw1:5a", "red", [ "v0" ] ],
+    [ "pwr1:VCC", "sw1:4a", "red", [ "v0" ] ],
+    [ "pwr1:VCC", "sw1:1a", "red", [ "v0" ] ],
+    [ "pwr1:VCC", "sw1:2a", "red", [ "v0" ] ],
+    [ "pwr1:VCC", "sw1:3a", "red", [ "v0" ] ],
+    [ "chip1:EXTIN1", "sw1:2b", "violet", [ "h0" ] ],
+    [ "sw1:3b", "chip1:EXTIN2", "violet", [ "h0" ] ],
+    [ "chip1:EXTIN3", "sw1:4b", "violet", [ "h0" ] ],
+    [ "chip1:EXTIN4", "sw1:5b", "violet", [ "h0" ] ],
+    [ "sw1:6b", "chip1:EXTIN5", "violet", [ "h0" ] ],
+    [ "sw1:7b", "chip1:EXTIN6", "violet", [ "h0" ] ],
+    [ "sw1:8b", "chip1:EXTIN7", "violet", [ "v0" ] ],
+    [ "chip2:EXTOUT0", "sevseg1:A", "green", [ "h21.01", "v-28.8", "h96" ] ],
+    [ "chip2:EXTOUT1", "sevseg1:B", "green", [ "h11.41", "v-48", "h115.2", "v38.4" ] ],
+    [
+      "chip2:EXTOUT2",
+      "sevseg1:C",
+      "green",
+      [ "h30.61", "v-38.4", "h115.2", "v105.6", "h-28.8" ]
+    ],
+    [ "chip2:EXTOUT3", "sevseg1:D", "green", [ "h49.81", "v57.6", "h48" ] ],
+    [ "sevseg1:E", "chip2:EXTOUT4", "green", [ "v9.6", "h-48", "v-38.4" ] ],
+    [ "chip2:EXTOUT5", "sevseg1:F", "green", [ "h69.01", "v-57.6", "h28.8" ] ],
+    [ "chip2:EXTOUT6", "sevseg1:G", "green", [ "h78.61", "v-57.6" ] ],
+    [ "chip2:EXTOUT7", "sevseg1:DP", "green", [ "v28.8", "h136.21" ] ],
+    [ "pwr2:GND", "sevseg1:COM.1", "black", [ "v0" ] ],
+    [ "chip1:EXTIN0", "sw2:2", "green", [ "h0", "v-38.4", "h-19.2" ] ],
+    [ "sw2:1", "clock1:CLK", "green", [ "v0" ] ],
+    [ "sw2:3", "sw1:1b", "violet", [ "v0" ] ],
+    [ "btn1:2.r", "sw2:3", "orange", [ "h90.6", "v49.8" ] ],
+    [ "pwr3:VCC", "btn1:1.r", "red", [ "v0" ] ],
+    [ "chip1:IN0", "flipflop2:CLK", "gold", [ "h165.01", "v48" ] ],
+    [ "chip1:IN1", "flipflop2:D", "purple", [ "h203.41", "v9.6" ] ],
+    [ "chip1:IN2", "flipflop2:S", "green", [ "h126.61", "v-28.8", "h134.4" ] ],
+    [ "chip1:IN3", "flipflop2:R", "gray", [ "h155.41", "v28.8" ] ],
+    [ "gnd1:GND", "chip2:OUT2", "black", [ "v0" ] ],
+    [ "gnd1:GND", "chip2:OUT3", "black", [ "v0" ] ],
+    [ "gnd1:GND", "chip2:OUT4", "black", [ "v0" ] ],
+    [ "gnd1:GND", "chip2:OUT5", "black", [ "v0" ] ],
+    [ "gnd1:GND", "chip2:OUT6", "black", [ "v0" ] ],
+    [ "gnd1:GND", "chip2:OUT7", "black", [ "v0" ] ],
+    [ "flipflop2:NOTQ", "chip2:OUT1", "green", [ "h48", "v-28.8" ] ],
+    [ "flipflop2:Q", "chip2:OUT0", "green", [ "v0", "h38.4", "v-19.2" ] ]
+  ]
+}
