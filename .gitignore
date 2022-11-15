@@ -1,4 +1,7 @@
 .DS_Store
 .idea
 .vscode
+__pycache__
 *.vcd
+dffsr_tb.out
+results.xml
