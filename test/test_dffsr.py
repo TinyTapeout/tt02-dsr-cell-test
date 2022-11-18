@@ -113,6 +113,7 @@ async def test_dffsr(dut):
     # Release both, data should go back to high on next clock
     await Timer(1, units='ns')
     i_set <= 0
+    await Timer(1, units='ps')
     i_reset <= 0
     await Timer(10, units='ps')
     assert o_q.value == 0
