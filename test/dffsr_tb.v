@@ -15,6 +15,10 @@ module test_dffsr ();
   wire notq = io_out[1];
 
   user_module_348378194290672212 dut (
+  `ifdef GL_TEST
+      .vccd1( 1'b1),
+      .vssd1( 1'b0),
+  `endif
       .io_in ({4'bxxxx, reset, set, data, clk}),
       .io_out(io_out)
   );

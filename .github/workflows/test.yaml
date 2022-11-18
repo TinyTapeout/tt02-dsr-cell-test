@@ -1,0 +1,76 @@
+name: test
+# either manually started, or on a schedule
+on: [ push, workflow_dispatch ]
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+jobs:
+  test:
+    env:
+        OPENLANE_IMAGE_NAME:    efabless/openlane:2022.07.02_01.38.08
+        OPENLANE_ROOT:  /home/runner/openlane
+        PDK_ROOT:       /home/runner/pdk
+        PDK:            sky130B
+
+    # ubuntu
+    runs-on: ubuntu-latest
+    steps:
+    # need the repo checked out
+    - name: checkout repo
+      uses: actions/checkout@v3
+
+    # build PDK and fetch OpenLane
+
+    - name: pdk & caravel
+      run: |
+        cd $HOME
+        git clone https://github.com/efabless/caravel_user_project.git -b mpw-7a
+        cd caravel_user_project
+        make setup
+
+    # need python
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - run: pip install requests PyYAML
+
+    # fetch the Verilog from Wokwi API
+    - name: fetch Verilog and build config
+      run: ./configure.py --create-user-config
+
+    # run OpenLane to build the GDS & GL verilog
+    - name: make GDS
+      run: >
+        docker run --rm
+        -v $OPENLANE_ROOT:/openlane
+        -v $PDK_ROOT:$PDK_ROOT
+        -v $(pwd):/work
+        -e PDK_ROOT=$PDK_ROOT
+        -u $(id -u $USER):$(id -g $USER)
+        $OPENLANE_IMAGE_NAME
+        /bin/bash -c "./flow.tcl -verbose 2 -overwrite -design /work/src -run_path /work/runs -tag wokwi"
+
+    # install oss fpga tools
+    - name: install oss-cad-suite
+      uses: YosysHQ/setup-oss-cad-suite@v1
+      with:
+          python-override: true
+    - run: | 
+        yosys --version
+        iverilog -V
+        cocotb-config --libpython
+        cocotb-config --python-bin
+
+    - name: test
+      run: |
+        make
+        # make will return success even if the test fails, so check for failure in the results.xml
+        ! grep failure results.xml
+
+    - name: gl test
+      run: |
+        GATES=yes make
+        # make will return success even if the test fails, so check for failure in the results.xml
+        ! grep failure results.xml
